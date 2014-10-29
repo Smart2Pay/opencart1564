@@ -1,0 +1,29 @@
+<modification>
+	<id>Smart2Pay</id>
+	<version>For OpenCart 1.5.x</version>
+	<vqmver>2.0.0</vqmver>
+	<author>Smart2Pay</author>
+	<file name="catalog/model/checkout/order.php">
+		<operation>
+			<search position="replace"><![CDATA[
+				public function update($order_id, $order_status_id, $comment = '', $notify = false) {
+					$order_info = $this->getOrder($order_id);
+
+					if ($order_info && $order_info['order_status_id']) {
+						// Fraud Detection
+						if ($this->config->get('config_fraud_detection')) {
+			]]></search>
+			<add><![CDATA[
+				public function update($order_id, $order_status_id, $comment = '', $notify = false) {
+					$order_info = $this->getOrder($order_id);
+
+					if ($order_info && $order_info['order_status_id']) {
+						// Fraud Detection
+						if ($this->config->get('config_fraud_detection')
+						  && ($order_status_id !=  7)
+							&& ($order_status_id != 10 )
+								&& ($order_status_id != 14 )) {				
+			]]></add>
+		</operation>
+	</file>
+</modification>

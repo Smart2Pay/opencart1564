@@ -4,6 +4,7 @@
 class ModelPaymentSmart2payPaysbuywallet extends Model {
 
     static $methodName = "paysbuywallet";
+    static $displayName = "Paysbuy Wallet";
     static $methodID   = 1038;
 
     public function getMethodId()
@@ -31,7 +32,7 @@ class ModelPaymentSmart2payPaysbuywallet extends Model {
 
         if ($this->isMethodAvailable($address, $total) && $settings['smart2pay_status']) {
 
-            $title = ucfirst(self::$methodName);
+            $title = ucfirst(self::$displayName);
             $code  = 'smart2pay_' . self::$methodName;
 
             $this->load->model('setting/setting');

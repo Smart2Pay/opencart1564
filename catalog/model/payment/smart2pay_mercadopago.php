@@ -4,6 +4,7 @@
 class ModelPaymentSmart2payMercadopago extends Model {
 
     static $methodName = "mercadopago";
+    static $displayName = "MercadoPago";
     static $methodID   = 46;
 
     public function getMethodId()
@@ -31,7 +32,7 @@ class ModelPaymentSmart2payMercadopago extends Model {
 
         if ($this->isMethodAvailable($address, $total) && $settings['smart2pay_status']) {
 
-            $title = ucfirst(self::$methodName);
+            $title = ucfirst(self::$displayName);
             $code  = 'smart2pay_' . self::$methodName;
 
             $this->load->model('setting/setting');

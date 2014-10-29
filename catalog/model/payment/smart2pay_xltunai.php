@@ -4,6 +4,7 @@
 class ModelPaymentSmart2payXltunai extends Model {
 
     static $methodName = "xltunai";
+    static $displayName = "XLTunai";
     static $methodID   = 1025;
 
     public function getMethodId()
@@ -31,7 +32,7 @@ class ModelPaymentSmart2payXltunai extends Model {
 
         if ($this->isMethodAvailable($address, $total) && $settings['smart2pay_status']) {
 
-            $title = ucfirst(self::$methodName);
+            $title = ucfirst(self::$displayName);
             $code  = 'smart2pay_' . self::$methodName;
 
             $this->load->model('setting/setting');

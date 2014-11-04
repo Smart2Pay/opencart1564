@@ -46,10 +46,10 @@ class ModelSmart2payPaymentMethod extends Model {
     {
     	$server_base = null;
     	if (!isset($this->request->server['HTTPS']) || ($this->request->server['HTTPS'] != 'on')) {
-				$server_base = HTTP_SERVER;
+				$server_base = HTTP_CATALOG;
 		} else 
 		{
-				$server_base = HTTPS_SERVER;
+				$server_base = HTTPS_CATALOG;
 		}
     	
     	

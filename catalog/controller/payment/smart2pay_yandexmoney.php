@@ -8,7 +8,7 @@ class ControllerPaymentSmart2payYandexmoney extends Controller {
     protected function index() {
 
         $this->load->model('payment/smart2pay');
-        $this->load->model('payment/smart2pay_yandemoney');
+        $this->load->model('payment/smart2pay_yandexmoney');
         $this->load->model('account/address');
         $this->load->language('payment/smart2pay');
 

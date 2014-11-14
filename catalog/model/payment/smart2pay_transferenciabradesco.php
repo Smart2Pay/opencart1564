@@ -3,7 +3,7 @@
 
 class ModelPaymentSmart2payTransferenciabradesco extends Model {
 
-    static $methodName = "transfenciabradesco";
+    static $methodName = "transferenciabradesco";
     static $displayName = "Transfencia entre Contas Bradesco";
     static $methodID   = 1002;
 

@@ -135,7 +135,9 @@ class ControllerPaymentSmart2pay extends Controller {
             'Currency'         => $order['currency_code'],
             'ReturnURL'        => $settings['smart2pay_return_url'],
             'IncludeMethodIDs' => implode(",", $methodIDs),
-            'CustomerName'     => $order['payment_firstname'],
+            'CustomerName'     => $order['payment_firstname'] . ' ' . $order['payment_lastname'],
+            'CustomerFirstName'=> $order['payment_firstname'],
+            'CustomerLastName' => $order['payment_lastname'],
             'CustomerEmail'    => $order['email'],
             'Country'          => $order['payment_iso_code_2'],
             'MethodID'         => $this->request->get['method'],
@@ -409,6 +411,8 @@ class ControllerPaymentSmart2pay extends Controller {
                 $orderID = $response['MerchantTransactionID'];
 
                 $order = $order = $this->model_checkout_order->getOrder($orderID);
+
+                $processed_ok = false;
                 
                 if($order['order_status_id'] == 0){
 					//if order is unconfirmed we confirm it depending on the smart2pay_order_confirm flag
@@ -456,6 +460,9 @@ class ControllerPaymentSmart2pay extends Controller {
                                 $settings['smart2pay_order_status_success'],
                                 "[" . date('Y-m-d H:i:s') . "] Smart2Pay :: order has been paid. [Method: " . $order['payment_method'] . "]"
                             );
+
+                            $processed_ok = true;
+
                             if ($settings['smart2pay_notify_customer_by_email']) {
                                 // Inform customer
                                 $this->informCustomer($order);
@@ -479,6 +486,7 @@ class ControllerPaymentSmart2pay extends Controller {
 								$settings['smart2pay_order_status_canceled'],
 								"[" . date('Y-m-d H:i:s') . "] Smart2Pay :: order payment has been canceled. [Method: " . $order['payment_method'] . "]"
 							);
+                            $processed_ok = true;
 						}
 						
                         break;
@@ -491,6 +499,7 @@ class ControllerPaymentSmart2pay extends Controller {
 								$settings['smart2pay_order_status_failed'],
 								"[" . date('Y-m-d H:i:s') . "] Smart2Pay :: order payment has failed. [Method: " . $order['payment_method'] . "]"
 							);
+                            $processed_ok = true;
 						}
                         break;
                     // Status = expired
@@ -502,6 +511,7 @@ class ControllerPaymentSmart2pay extends Controller {
 								$settings['smart2pay_order_status_expired'],
 								"[" . date('Y-m-d H:i:s') . "] Smart2Pay :: order payment has expired. [Method: " . $order['payment_method'] . "]"
 							);
+                            $processed_ok = true;
 						}
                         break;
 
@@ -510,22 +520,28 @@ class ControllerPaymentSmart2pay extends Controller {
                         break;
                 }
 
-                // NotificationType IS payment
-                if (strtolower($response['NotificationType']) == 'payment') {
-                    // prepare string for 'da hash
-                    $responseHashString = "notificationTypePaymentPaymentId" . $response['PaymentID'];
-                    // prepare response data
-                    $responseData = array(
-                        'NotificationType' => 'Payment',
-                        'PaymentID' => $response['PaymentID'],
-                        'Hash' => $recomposedHash = $this->model_payment_smart2pay->computeHash($responseHashString, $settings['smart2pay_signature'])
-                    );
-                    // output response
-                    echo "NotificationType=payment&PaymentID=" . $responseData['PaymentID'] . "&Hash=" . $responseData['Hash'];
+                if($processed_ok) { //if notification was processed OK, we respond
+                    // NotificationType IS payment
+                    if (strtolower($response['NotificationType']) == 'payment') {
+                        // prepare string for the hash
+                        $responseHashString = "notificationTypePaymentPaymentId" . $response['PaymentID'];
+                        // prepare response data
+                        $responseData = array(
+                            'NotificationType' => 'Payment',
+                            'PaymentID' => $response['PaymentID'],
+                            'Hash' => $recomposedHash = $this->model_payment_smart2pay->computeHash($responseHashString, $settings['smart2pay_signature'])
+                        );
+                        // output response
+                        echo "NotificationType=payment&PaymentID=" . $responseData['PaymentID'] . "&Hash=" . $responseData['Hash'];
+                    }
+                }
+                else{
+                    echo "OpenCart Plugin was not able to process this notification";
                 }
             }
             else{
                 $this->model_payment_smart2pay->log("Hashes do not match (received:" . $response['Hash'] . ") (recomposed:" . $recomposedHash . ")", "warning");
+                echo "OpenCart Plugin: Hashes did not match (received:" . $response['Hash'] . ") (recomposed:" . $recomposedHash . ")";
             }
         } catch (Exception $e) {
             $this->model_payment_smart2pay->log($e->getMessage(), "exception");
@@ -541,7 +557,16 @@ class ControllerPaymentSmart2pay extends Controller {
         // HTML Mail
         $template = new Template();
 
-        $template->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');
+        if(defined('HTTP_IMAGE')){
+            $logo_path = HTTP_IMAGE . $this->config->get('config_logo');
+        }
+        else
+        {
+            $logo_path = HTTP_SERVER . 'image/' .$this->config->get('config_logo');
+        }
+
+
+        $template->data['logo'] = $logo_path;
         $template->data['store_name'] = $order['store_name'];
         $template->data['store_url'] = $order['store_url'];
         $template->data['order_id'] = $order['order_id'];

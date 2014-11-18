@@ -444,17 +444,17 @@ class ControllerPaymentSmart2pay extends Controller {
                         $orderAmount =  round($order['total'] * $order['currency_value'] * 100);
                         $orderCurrency = $order['currency_code'];
 
-                        if( ((int) $orderAmount === (int) $response['Amount']) && ($orderCurrency == $response['Currency'])){
+                        if( ((int) $orderAmount === (int) $response['Amount']) && ($orderCurrency == $response['Currency'])) {
 
                             $this->model_payment_smart2pay->log("Amount and currency match", "info");
-							
-							if($order['order_status_id'] == 0){
-								$this->model_payment_smart2pay->log("Confirming order..", "info");
-								$this->model_checkout_order->confirm($orderID, $settings['smart2pay_order_status_new']);	
-							}
-							
-							$this->model_payment_smart2pay->log("Updating order - setting received notification to history..", "info");
-							
+
+                            if ($order['order_status_id'] == 0) {
+                                $this->model_payment_smart2pay->log("Confirming order..", "info");
+                                $this->model_checkout_order->confirm($orderID, $settings['smart2pay_order_status_new']);
+                            }
+
+                            $this->model_payment_smart2pay->log("Updating order - setting received notification to history..", "info");
+
                             $this->model_checkout_order->update(
                                 $orderID,
                                 $settings['smart2pay_order_status_success'],
@@ -464,8 +464,13 @@ class ControllerPaymentSmart2pay extends Controller {
                             $processed_ok = true;
 
                             if ($settings['smart2pay_notify_customer_by_email']) {
-                                // Inform customer
-                                $this->informCustomer($order);
+                                try {
+                                    // Inform customer
+                                    $this->informCustomer($order);
+                                }
+                                catch (Exception $e){
+                                    $this->model_payment_smart2pay->log("Could not send e-mail: " . $e->getMessage(), "info");
+                                }
                             }
                         }
                         else{

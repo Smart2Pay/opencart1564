@@ -43,6 +43,7 @@ class ModelPaymentSmart2payBanktransfer extends Model {
             $method_data = array(
                 'code'       => $code,
                 'title'      =>  $title,
+                'terms'      => false,
                 'sort_order' => 0 //$this->config->get('smart2pay_sort_order')
             );
         }

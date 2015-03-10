@@ -37,12 +37,11 @@ class ModelPaymentSmart2payOnlinebankingthailand extends Model {
 
             $this->load->model('setting/setting');
 
-            $settings = $this->model_setting_setting->getSetting('smart2pay');
-
             $method_data = array(
                 'code'       => $code,
                 'title'      =>  $title,
-                'sort_order' => 0 //$this->config->get('smart2pay_sort_order')
+                'terms'      => false,
+                'sort_order' => 0
             );
         }
 

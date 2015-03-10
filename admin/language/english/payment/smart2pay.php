@@ -4,7 +4,18 @@
  */
 $_['heading_title'] = 'Smart2Pay';
 
+/*
+ * Texts
+ */
 $_['text_smart2pay'] = '<a onclick="window.open(\'http://www.smart2pay.com/\');"><img style="max-width: 115px" src="view/image/payment/smart2pay.png" alt="Smart2Pay" title="Smart2Pay" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_payment'] = 'Payment';
+$_['text_edit'] = 'Edit Smart2Pay Settings';
+
+/*
+ * Button texts
+ */
+$_['btn_text_save'] = 'Save';
+$_['btn_text_cancel'] = 'Cancel';
 
 /*
  * Labels

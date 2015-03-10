@@ -1,21 +1,23 @@
 <?php
 
     echo $header;
+    echo $column_left;
 
     function renderSmart2PayFormElements($elements, $errors) {
         foreach($elements as $name => $element) {
-            echo "<tr>";
-                echo "<td>" . ( (isset($element['required']) && $element['required']) ? "<span class='required'>*</span>" : "" ) . $element['label'] . "</td>";
-                echo "<td>";
+            echo '<div class="form-group' . ( (isset($element['required']) && $element['required']) ? "required" : "" ) . '">';
+
+                echo '<label class="col-sm-2 control-label" for="">' . $element['label'] . "</label>";
+                echo '<div class="col-sm-10">';
                     switch($element['type']) {
                         case 'text':
-                            echo "<input style='width: 300px' type='text' name='" . $name . "' value='" . $element['value'] . "'/>";
+                            echo "<input class='form-control' style='width: 300px' type='text' name='" . $name . "' value='" . $element['value'] . "'/>";
                             break;
                         case 'textarea':
-                            echo "<textarea style='width: 300px' name='" . $name . "'>" . $element['value'] . "</textarea>";
+                            echo "<textarea class='form-control' style='width: 300px' name='" . $name . "'>" . $element['value'] . "</textarea>";
                             break;
                         case 'select':
-                            echo "<select " . ( (isset($element['multiple']) and $element['multiple']) ? "multiple" : "") . " name='" . $name . "'>";
+                            echo "<select class='form-control' " . ( (isset($element['multiple']) and $element['multiple']) ? "multiple" : "") . " name='" . $name . "'>";
                                 foreach($element['options'] as $key => $label) {
                                     echo "<option " . (in_array($key, (array) $element['value']) ? "selected='selected'" : "") . " value='" . $key . "'>" . $label . "</option>";
                                 }
@@ -54,10 +56,10 @@
                     }
 
                     if (isset($errors[$name])) {
-                        echo "<span class='error'>" . $errors[$name] . "</span>";
+                        echo '<div class="text-danger">' . $errors[$name] . '</div>';
                     }
-                echo "</td>";
-            echo "</tr>";
+                echo "</div>";
+            echo "</div>";
         }
     }
 
@@ -79,36 +81,43 @@
 ?>
 
 <div id="content">
-    <div class="breadcrumb">
-        <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-        <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
-        <?php } ?>
-    </div>
-    <?php if ($error_warning) { ?>
-    <div class="warning"><?php echo $error_warning; ?></div>
-    <?php } ?>
-    <div class="box">
-        <div class="heading">
-            <h1><img src="view/image/payment.png" alt="" /> Smart2Pay </h1>
-            <div class="buttons">
-                <a onclick="$('#form').submit();" class="button">Save</a>
-                <a onclick="location = '<?php echo $cancel; ?>';" class="button">Cancel</a>
-            </div>
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form" data-toggle="tooltip" title="<?php echo $btn_text_save; ?>" class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $btn_text_cancel; ?>" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+            <h1><?php echo $heading_title; ?></h1>
+            <ul class="breadcrumb">
+                <?php foreach ($breadcrumbs as $breadcrumb) { ?>
+                <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+                <?php } ?>
+            </ul>
         </div>
-        <div class="content">
-            <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-                <table class="form">
+    </div>
+
+    <div class="container-fluid">
+        <?php if ($error_warning) { ?>
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        <?php } ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $text_edit; ?></h3>
+            </div>
+            <div class="panel-body">
+                <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form" class="form-horizontal">
                     <?php
                         renderSmart2PayFormElements($form_elements, $error);
                     ?>
-                    <tr>
-                        <td style="background: #e3e3c7">Log</td>
-                        <td style="background: #e3e3c7">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="">Log</label>
+                        <div class="col-sm-10">
                             <textarea  style="background: #000000; color: #008000; resize: both; width: 700px; height: 150px;" disabled="disabled"><?php echo renderSmart2PayLogs($logs)  ?></textarea>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

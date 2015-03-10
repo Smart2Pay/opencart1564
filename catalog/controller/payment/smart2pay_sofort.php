@@ -5,7 +5,7 @@ class ControllerPaymentSmart2paySofort extends Controller {
      * Index action
      *  Used within checkout flow
      */
-    protected function index() {
+    public function index() {
 
         $this->load->model('payment/smart2pay');
         $this->load->model('payment/smart2pay_sofort');
@@ -13,29 +13,17 @@ class ControllerPaymentSmart2paySofort extends Controller {
         $this->load->language('payment/smart2pay');
 
         /*
-         * Get address
-         */
-        if ($this->customer->isLogged() && isset($this->session->data['payment_address_id'])) {
-            $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
-        } elseif (isset($this->session->data['guest'])) {
-            $payment_address = $this->session->data['guest']['payment'];
-        }
-
-        /*
          * Set template data
          */
         $language = new Language(DIR_LANGUAGE);
         $translations = $language->load("payment/smart2pay");
-        $this->data['trans'] = $translations;
-
-        $this->data['methods']  = $this->model_payment_smart2pay->getActiveMethods($payment_address, true);
+        $data['trans'] = $translations;
 
         /*
          * Set checkout method id
          *   - this might be set by s2p checkout helper in checkout step before last one
          */
-        //$this->data['checkout_method_id'] = isset($_SESSION['smart2pay_checkout_method_id']) ? $_SESSION['smart2pay_checkout_method_id'] : null;
-        $this->data['checkout_method_id'] = $this->model_payment_smart2pay_sofort->getMethodId();
+        $data['checkout_method_id'] = $this->model_payment_smart2pay_sofort->getMethodId();
 
         /*
          * Set base URL
@@ -49,9 +37,9 @@ class ControllerPaymentSmart2paySofort extends Controller {
 
         if (is_dir(DIR_TEMPLATE . $this->config->get('config_template') . '/image/payment/smart2pay')) {
             $this->template = $this->config->get('config_template') . '/template/payment/smart2pay.tpl';
-            $this->data['base_img_url'] = $server_base . 'catalog/view/theme/' . $this->config->get('config_template') . '/image/payment/smart2pay/methods/';
+            $data['base_img_url'] = $server_base . 'catalog/view/theme/' . $this->config->get('config_template') . '/image/payment/smart2pay/methods/';
         } else {
-            $this->data['base_img_url'] = $server_base . 'catalog/view/theme/default/image/payment/smart2pay/methods/';
+            $data['base_img_url'] = $server_base . 'catalog/view/theme/default/image/payment/smart2pay/methods/';
         }
 
         /*
@@ -63,6 +51,6 @@ class ControllerPaymentSmart2paySofort extends Controller {
             $this->template = 'default/template/payment/smart2pay.tpl';
         }
 
-        $this->render();
+        return $this->load->view($this->template, $data);
     }
 }

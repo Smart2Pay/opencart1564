@@ -118,13 +118,13 @@ class ModelSmart2payPaymentMethod extends Model {
                     "type"  => "text",
                     "value" => $server_base . "index.php?route=payment/smart2pay/feedback"
                 ),
-            "smart2pay_title" =>
+            /*"smart2pay_title" =>
                 array(
                     "label" => "Title",
                     "type"  => "text",
                     "value" => "Smart2Pay"
                 ),
-            /*"smart2pay_pre_display_methods" =>
+            "smart2pay_pre_display_methods" =>
                 array(
                     "label" => "Pre Display Methods",
                     "type"  => "select",
@@ -135,9 +135,6 @@ class ModelSmart2payPaymentMethod extends Model {
                         ),
                     "value"    => 0
                 ),
-            */
-
-            /*
             "smart2pay_active_methods" =>
                 array(
                     "label"   => "Active methods",
@@ -150,37 +147,35 @@ class ModelSmart2payPaymentMethod extends Model {
                     "value"    => null,
                     "multiple" => true
                 ),
-            */
-
-//            "smart2pay_methods_display_mode" =>
-//                array(
-//                    "label"   => "Methods display mode",
-//                    "type"    => "select",
-//                    "options" =>
-//                        array(
-//                            0 => "Logo",
-//                            1 => "Text",
-//                            2 => "Logo and Text"
-//                        ),
-//                    "value" => 0
-//                ),
-//            "smart2pay_show_methods_in_grid" =>
-//                array(
-//                    "label"   => "Show methods in grid",
-//                    "type"    => "select",
-//                    "options" =>
-//                        array(
-//                            0 => "No",
-//                            1 => "Yes"
-//                        ),
-//                    "value" => 0
-//                ),
-//            "smart2pay_grid_column_number" =>
-//                array(
-//                    "label" => "Grid column number",
-//                    "type"  => "text",
-//                    "value" => 2
-//                ),
+            "smart2pay_methods_display_mode" =>
+                array(
+                    "label"   => "Methods display mode",
+                    "type"    => "select",
+                    "options" =>
+                        array(
+                            0 => "Logo",
+                            1 => "Text",
+                            2 => "Logo and Text"
+                        ),
+                    "value" => 0
+                ),
+            "smart2pay_show_methods_in_grid" =>
+                array(
+                    "label"   => "Show methods in grid",
+                    "type"    => "select",
+                    "options" =>
+                        array(
+                            0 => "No",
+                            1 => "Yes"
+                        ),
+                    "value" => 0
+                ),
+            "smart2pay_grid_column_number" =>
+                array(
+                    "label" => "Grid column number",
+                    "type"  => "text",
+                    "value" => 2
+                ),
             "smart2pay_auto_select" =>
                 array(
                     "label"   => "Auto select Smart2Pay",
@@ -192,17 +187,18 @@ class ModelSmart2payPaymentMethod extends Model {
                         ),
                     "value" => 0
                 ),
-//            "smart2pay_send_payment_method" =>
-//                array(
-//                    "label"   => "Send payment method",
-//                    "type"    => "select",
-//                    "options" =>
-//                        array(
-//                            0 => "No",
-//                            1 => "Yes"
-//                        ),
-//                    "value" => 0
-//                ),
+            "smart2pay_send_payment_method" =>
+                array(
+                    "label"   => "Send payment method",
+                    "type"    => "select",
+                    "options" =>
+                        array(
+                            0 => "No",
+                            1 => "Yes"
+                        ),
+                    "value" => 0
+                ),
+            */
             "smart2pay_send_order_number_as_product_description" =>
                 array(
                     "label"   => "Send order number as product description",

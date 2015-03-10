@@ -12,20 +12,25 @@ class ControllerPaymentSmart2payMultibanco extends Controller {
 
         $this->load->language('payment/smart2pay');
 
-        $this->data['error'] = array();
+        $data['error'] = array();
+
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_edit'] = $this->language->get('text_edit') . " (" . ucwords($this->methodName) . ")";
+        $data['btn_text_save'] = $this->language->get('btn_text_save');
+        $data['btn_text_cancel'] = $this->language->get('btn_text_cancel');
 
         /*
          * Save POST data if valid
          */
-        $this->data['form'] = array();
+        $data['form'] = array();
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
-            $this->model_setting_setting->editSetting('smart2pay_' . $this->methodName, array_merge($this->data['form'], $this->request->post));
+            $this->model_setting_setting->editSetting('smart2pay_' . $this->methodName, array_merge($data['form'], $this->request->post));
 
             $this->session->data['success'] = 'Success: You have modified Smart2Pay ' . ucfirst($this->methodName) . ' settings!';
 
-            $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
         /*
@@ -65,44 +70,41 @@ class ControllerPaymentSmart2payMultibanco extends Controller {
             }
         }
 
-        $this->data['form_elements'] = $formElements;
+        $data['form_elements'] = $formElements;
 
         /*
          * Set links
          */
-        $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['action'] = $this->url->link('payment/smart2pay_' . $this->methodName, 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('payment/smart2pay_' . $this->methodName, 'token=' . $this->session->data['token'], 'SSL');
 
         /*
          * Set validation errors and warnings
          */
         if (isset($this->error['warning'])) {
-            $this->data['error_warning'] = $this->error['warning'];
+            $data['error_warning'] = $this->error['warning'];
         } else {
-            $this->data['error_warning'] = '';
+            $data['error_warning'] = '';
         }
 
         /*
          * Set breadcrumbs
          */
-        $this->data['breadcrumbs'] = array();
+        $data['breadcrumbs'] = array();
 
-        $this->data['breadcrumbs'][] = array(
-            'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => false
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
         );
 
-        $this->data['breadcrumbs'][] = array(
-            'text'      => $this->language->get('text_payment'),
-            'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
+        $data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_payment'),
+            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL')
         );
 
-        $this->data['breadcrumbs'][] = array(
+        $data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('payment/smart2pay_' . $this->methodName, 'token=' . $this->session->data['token'], 'SSL'),
-            'separator' => ' :: '
+            'href'      => $this->url->link('payment/smart2pay_' . $this->methodName, 'token=' . $this->session->data['token'], 'SSL')
         );
 
 
@@ -115,10 +117,15 @@ class ControllerPaymentSmart2payMultibanco extends Controller {
             'common/footer'
         );
 
+        $data['header'] = $this->load->controller('common/header');
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['footer'] = $this->load->controller('common/footer');
+
         /*
          * Render
          */
-        $this->response->setOutput($this->render());
+        $data['error'] = $this->error;
+        $this->response->setOutput($this->load->view('payment/smart2pay_payment_method.tpl', $data));
 	}
 
     /**
@@ -133,7 +140,7 @@ class ControllerPaymentSmart2payMultibanco extends Controller {
             return false;
 		}
 
-        $this->data['error'] = array();
+        $this->error = array();
 
         return true;
 	}

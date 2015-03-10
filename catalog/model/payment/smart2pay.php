@@ -183,6 +183,7 @@ class ModelPaymentSmart2pay extends Model {
      * Log
      *
      * @param string $data
+     * @param string $type
      */
     public function log($data, $type = "info")
     {
